@@ -1,6 +1,6 @@
 Package.describe({
   name: 'jonlachlan:quill-reactive',
-  version: '0.0.3',
+  version: '0.0.4',
   summary: 'Helpers for QuillJS rich text (WYSIWYG) editor, with live editing similar to Google Docs or Etherpad',
   // URL to the Git repository containing the source code for this package.
   git: 'https://github.com/jonlachlan/quill-reactive',
