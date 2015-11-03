@@ -1,4 +1,4 @@
-This package is currently version 0.0.1, suitable for community testing and feedback. See the todos section below for development plans.
+This package is currently version 0.0.x, suitable for community testing and feedback. See the todos section below for development plans.
 
 # QuillReactive
 
