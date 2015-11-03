@@ -1,6 +1,6 @@
 This package is currently version 0.0.x, suitable for community testing and feedback. See the todos section below for development plans.
 
-# QuillReactive
+# quillReactive
 
 Helpers for QuillJS rich text (WYSIWYG) editor, with live editing similar to Google Docs or Etherpad.
 
@@ -10,10 +10,10 @@ To add it to your project:
 
 `meteor add jonlachlan:quill-reactive`
 
-To use the `QuillReactive` template, provide arguments for collectionName, docId and field.
+To use the `quillReactive` template, provide arguments for collectionName, docId and field.
 
 ```
- {{> QuillReactive collection="myCollection" docId=docId field="fieldName"}}
+ {{> quillReactive collection="myCollection" docId=docId field="fieldName"}}
 ```
 
 Note that `collection` should be the MongoDB collection name, not the global variable.
