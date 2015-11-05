@@ -1,38 +1,70 @@
 Meteor.methods({
-  'updateQuill': function(collectionName, docId, field, delta, newContentsGuess) {
+  'updateQuill': function(collectionName, docId, field, delta, index) {
     var collection = Mongo.Collection.get(collectionName);
-    var doc = collection.findOne({_id: docId});
-    var fieldDelta = field + "Delta";
-    // var fieldDeltaStack = field + "DeltaStack";
-    // var fieldDeltaIndex = field + "DeltaIndex";
-    var update;
-    var oldDelta = new Delta(doc[fieldDelta]);
+    var stack = QuillStacks.findOne({collection: collectionName, docId: docId, field: field});
+    if(typeof stack === "undefined") {
+      console.log("inserting new stack")
+      var doc = collection.findOne({_id: docId});
+      var startDelta = new Delta(doc[field]);
+      stack = QuillStacks.insert({
+        collection: collectionName,
+        docId: docId,
+        field: field,
+        stack: [
+          {
+            delta: startDelta,
+            content: startDelta
+          }
+        ]
+      });
+      stack = QuillStacks.findOne({collection: collectionName, docId: docId, field: field});
+    }
+    var oldContent = new Delta( stack.stack[stack.stack.length - 1].content );
 
-    // if(index < doc[fieldDeltaIndex]) {
-    //   // More updates have taken place since method was called, so we need to
-    //   // transform our delta to ensure we're not overwriting other work.
-    //   console.log("handling out-of-turn delta");
-    //   var newDelta = new Delta(delta);
-    //   for(var i = index; i <= doc[fieldDeltaIndex]; i++) {
-    //     var last = new Delta(doc[fieldDeltaStack][i])
-    //     newDelta = last.transform(newDelta, 1);
-    //   }
-    //   update = oldDelta.compose(newDelta);
-    // } else {
-      update = oldDelta.compose(delta);
-    // }
+    if(index < stack.currentIndex) {
+      // More updates have taken place since method was called, so we need to
+      // transform our delta to ensure we're not overwriting other work.
+      console.log("handling out-of-turn delta");
+      var newDelta = new Delta(delta);
+      for(var i = index; i <= stack.currentIndex; i++) {
+        var last = new Delta(stack.stack[i].delta)
+        newDelta = last.transform(newDelta, 1);
+      }
+      content = oldContent.compose(newDelta);
+    } else {
+      content = oldContent.compose(delta);
+    }
 
-    var updateObj = {$set: {}};
-    updateObj["$set"][fieldDelta] = update;
-    // if(typeof doc[fieldDeltaIndex] === "undefined") {
-    //   updateObj["$set"][fieldDeltaStack] = [ oldDelta.diff(update) ];
-      // updateObj["$set"][fieldDeltaIndex] = 0;
-    // } else {
-      // updateObj.$push = {};
-      // updateObj["$push"][fieldDeltaStack] = oldDelta.diff(update);
-    //   updateObj["$inc"] = {};
-    //   updateObj["$inc"][fieldDeltaIndex];
-    // }
-    collection.update({_id: docId}, updateObj)
+    if(stack.stack && stack.stack.length) {
+      var stackUpdate = {
+        $push: {
+          stack: {
+            delta: delta,
+            content: content
+          }
+        }
+      };
+    } else {
+      var stackUpdate = {
+        $set: [{
+          stack: {
+            delta: delta,
+            content: content
+          }
+        }]
+      };
+    }
+
+    QuillStacks.update({_id: stack._id}, stackUpdate);
+
+    var collectionUpdate = { $set: {} };
+    collectionUpdate["$set"][field + "Delta"] = content;
+    if(typeof stack.currentIndex === "undefined") {
+      collectionUpdate["$set"][field + "Index"] = 0;
+    } else {
+      collectionUpdate["$inc"] = {};
+      collectionUpdate["$inc"][field + "Index"];
+    }
+    collection.update({_id: docId}, collectionUpdate)
   }
 })
