@@ -33,6 +33,8 @@ Template.quillReactive.onCreated(function() {
 Template.quillReactive.onRendered(function() {
     tmpl = this;
     // var authorId = Meteor.user().username;
+    // TODO: add authorship
+    // TODO: add cursors
     tmpl.quillEditor = new Quill('#editor-' + tmpl.data.docId, {
         modules: {
         'toolbar': '#toolbar'
@@ -43,14 +45,7 @@ Template.quillReactive.onRendered(function() {
     //debug
     window.qe = tmpl;
 
-    // var previousDraft = QuillDrafts.get(tmpl.data.collection + "-" + tmpl.data.docId + "-" + tmpl.data.field);
-    // if(previousDraft && previousDraft.draft && previousDraft.draft.ops.length > 0) {
-    //   tmpl.quillEditor.oldDelta = new Delta(previousDraft.oldDelta);
-    //   var draftDelta = tmpl.quillEditor.oldDelta.compose(previousDraft.draft);
-    //   tmpl.quillEditor.setContents(draftDelta);
-    // } else {
-        tmpl.quillEditor.oldDelta = tmpl.quillEditor.getContents();
-    // }
+    tmpl.quillEditor.oldDelta = tmpl.quillEditor.getContents();
 
     // Fix link tooltip from getting stuck
     tmpl.$('.ql-container').mousedown(function(e) {
@@ -101,10 +96,6 @@ Template.quillReactive.onRendered(function() {
             tmpl.quillEditor.updateContents(remoteChanges,'silent');
             tmpl.quillEditor.oldDelta = tmpl.quillEditor.getContents();
         }
-
-        //tmpl.quillEditor.oldDelta = oldContents.compose(remoteChanges);
-
-
     });
 
     Tracker.autorun(function() {
