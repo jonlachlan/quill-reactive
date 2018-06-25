@@ -1,51 +1,34 @@
 <template name="quillReactive">
+    <link href="//cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
   <div class="ql-containers {{#if hasEdits}}unsaved{{/if}}">
-    <div id="toolbar" class="needsclick toolbar ql-toolbar ql-snow">
-      <span class="ql-format-group">
-        <span title="Bold" class="ql-format-button ql-bold"></span>
-        <span class="ql-format-separator"></span>
-        <span title="Italic" class="ql-format-button ql-italic"></span>
-        <span class="ql-format-separator"></span>
-        <span title="Underline" class="ql-format-button ql-underline"></span>
-        <span class="ql-format-separator"></span>
-        <span title="Strikethrough" class="ql-format-button ql-strike"></span>
-      </span>
-      <span class="ql-format-group">
-        <span title="List" class="ql-format-button ql-list"></span>
-        <span class="ql-format-separator"></span>
-        <span title="Bullet" class="ql-format-button ql-bullet"></span>
-        <span class="ql-format-separator"></span>
-      </span>
-      <span class="ql-format-group">
-        <span title="Link" class="ql-format-button ql-link"></span>
-      </span>
+    <div id="status" class="needsclick status">
       <button class="toggle-live-editing ui compact icon {{#unless connection.connected}}disabled{{else}}{{#if liveEditing}}blue active{{/if}}{{/unless}} button">
         <div class="live-editing-popup ui popup">Live editing is {{#if liveEditing}}ON{{else}}OFF{{/if}}</div>
         <i class="icons">
           <i class="exchange icon"></i>
         </i>
       </button>
-      {{#if connection.connected}}
-        <div class="ql-save-discard-buttons ui right floated compact buttons">
-          <button title="Save" class="ql-save ui {{#if hasEdits}}primary{{else}}disabled{{/if}} icon button"><i class="save icon"></i>Save</button>
-          <button title="Discard" class="ql-discard ui {{#unless hasEdits}}disabled{{/unless}} icon button"><i class="trash icon"></i>Discard</button>
-        </div>
-      {{/if}}
-      {{#if connection.connecting}}
-      <div class="ql-save-discard-buttons ui padded right floated compact buttons">
-        <button class="ql-reconnect ui icon button"><i class="loading refresh icon"></i></button>
-        <button class="ql-save disabled ui icon button" disabled><i class="save icon"></i>Cannot save, no connection</button>
-      </div>
-      {{/if}}
-      {{#if connection.offline}}
         <div class="ql-save-discard-buttons ui padded right floated compact buttons">
-          <button class="ql-reconnect ui icon button"><i class="refresh icon"></i></button>
-          <button class="ql-save disabled ui icon button" disabled><i class="save icon"></i>Cannot save, no connection</button>
-        </div>
-      {{/if}}
-    </div>
+          <button title="Save" class="ql-save ui  icon button"><i class="save icon"></i>Save</button>
+          <button title="Discard" class="ql-discard ui  icon button"><i class="trash icon"></i>Discard</button>
+          <a href="https://www.google.com">link to google</a>
 
-    <div id="editor-{{docId}}">
+        </div>
+    </div>
+    <div id="toolbar">
+        <!-- Add font size dropdown -->
+        <select class="ql-size">
+          <option value="small">small</option>
+          <!-- Note a missing, thus falsy value, is used to reset to default -->
+          <option selected>normal</option>
+          <option value="large">large</option>
+          <option value="huge">huge</option>
+        </select>
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+      </div>
+
+    <div class="ql-editor" id="editor-{{docId}}">
       <div class="needsclick" contenteditable=true spellcheck=false></div>
     </div>
   </div>

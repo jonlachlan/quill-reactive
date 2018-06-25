@@ -1,3 +1,5 @@
+Update of the quill-reactive project to support live editing
+
 This package is currently version 0.0.x, suitable for community testing and feedback. See the todos section below for development plans.
 
 # quillReactive
