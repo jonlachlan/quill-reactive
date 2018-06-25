@@ -2,12 +2,6 @@
 //since we are using an npm dependency in the same file
 const Quill = require('quill');
 
-// if(typeof QuillDrafts === "undefined") {
-//     // Persistent ReactiveDict makes drafts save over page reloads.
-//     // However, two tabs in the same browser will be sharing the same data!
-//     QuillDrafts = new PersistentReactiveDict('QuillDrafts');
-// }
-
 textChangesListener = function(delta, oldDelta, source) {
     console.log('text change listener called',source);
     if (source === 'user') {
